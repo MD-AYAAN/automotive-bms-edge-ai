@@ -39,14 +39,29 @@ Built to address a gap in published BMS research: no existing paper combines LiF
 
 ```
 automotive-bms-edge-ai/
+
 │
+
 ├── stm32_safety_layer/
-│   └── main.c                    # STM32F407 firmware (STM32CubeIDE)
+
+│   └── main.c                      STM32F407 firmware (STM32CubeIDE)
+
 │
+
 ├── esp32_intelligence_layer/
-│   ├── esp32_bms_v29_edge_ai.ino # ESP32-S3 firmware (Arduino IDE)
-│   └── bms_cnn_model.h           # INT8 quantized TFLite model (29,616 bytes)
+
+│   ├── esp32_bms_v29_edge_ai.ino   ESP32-S3 intelligence layer (Arduino IDE)
+
+│   └── bms_cnn_model.h             INT8 quantized TFLite model (29,616 bytes)
+
 │
+
+├── v2x_receiver/
+
+│   └── v2x_receiver.ino            30-pin ESP32 V2X alert receiver (Arduino IDE)
+
+│
+
 └── README.md
 ```
 
