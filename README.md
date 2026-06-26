@@ -16,24 +16,20 @@ Built to address a gap in published BMS research: no existing paper combines LiF
 
 ## System Architecture
 
-```
-┌─────────────────────────────┐         ┌──────────────────────────────────┐
-│   STM32F407 — SAFETY LAYER  │         │  ESP32-S3 — INTELLIGENCE LAYER   │
-│                             │         │                                  │
-│  • 8x DS18B20 temp sensors  │  CAN    │  • MCP2515 SPI-to-CAN receiver   │
-│  • 4x ADC voltage taps      │ 125kbps │  • 1D CNN TFLite Micro inference  │
-│  • 16x oversampled ADC      │ ──────► │  • 3-tier gradient analysis      │
-│  • IIR voltage filter       │         │  • Thermal gate + persist filter  │
-│  • Outlier rejection filter │         │  • OLED SPI display (4 pages)    │
-│  • CAN TX: 4 frames         │         │  • Ubidots cloud dashboard       │
-│  • LED + Buzzer alerts      │         │  • V2X ESP-NOW broadcast alerts  │
-└─────────────────────────────┘         └──────────────────────────────────┘
-         │                                            │
-         └──────── 4S LiFePO4 Pack ──────────────────┘
-              32700 cells | 12.8V nominal | 6Ah
-```
+![System Architecture](docs/images/system_architecture.jpg)
 
----
+| STM32F407 — SAFETY LAYER | ESP32-S3 — INTELLIGENCE LAYER |
+|---|---|
+| 8x DS18B20 temperature sensors | MCP2515 SPI-to-CAN receiver |
+| 4x ADC voltage taps (12-bit, 16x oversampled) | 1D CNN TFLite Micro inference (27ms) |
+| IIR voltage filter (alpha=0.10) | 3-tier gradient analysis (intra/terminal/inter) |
+| Outlier + recovery temp filter | Thermal gate + persistence filter |
+| CAN TX: 4 frames (0x100–0x103) | OLED SPI display (4 rotating pages) |
+| LED + Buzzer status indicators | Ubidots cloud dashboard (10 variables) |
+| | V2X ESP-NOW broadcast alerts |
+
+**Communication:** CAN bus @ 125 kbps | 4 frames (0x100–0x103) | MCP2515 SPI bridge on ESP32 side  
+**Battery pack:** 4S LiFePO4 32700 cells | 12.8V nominal | 6Ah | TDT 4S 10A hardware protection
 
 ## Repository Structure
 
@@ -205,3 +201,28 @@ S7     Positive Term.  Terminal temp
 
 Mohammed Ayaan · Aditya · Dhanush  
 Course: 21ECP302L — SRM Institute of Science and Technology, Kattankulathur
+
+
+---
+
+## Hardware & Diagrams
+
+### Complete System Hardware
+![System During Operation](docs/images/system_during_operation.jpg)
+![Hardware Setup](docs/images/hardware_setup.jpg)
+
+### Layer Block Diagrams
+![STM32 Safety Layer](docs/images/stm32_safety_layer_block.jpg)
+![ESP32 Intelligence Layer](docs/images/esp32_intelligence_layer_block.jpg)
+
+### Battery Configuration & Sensor Placement
+![Battery Pack Configuration](docs/images/battery_pack_config.jpg)
+![Temperature Sensor Placement](docs/images/temp_sensor_placement.jpg)
+
+### Edge-AI & Gradient Analysis
+![CNN Model Architecture](docs/images/cnn_model_architecture.png)
+![Gradient Methodology](docs/images/gradient_methodology.png)
+![Post-Inference Pipeline](docs/images/post_inference_pipeline.png)
+
+### Cloud Dashboard
+![Ubidots Dashboard](docs/images/ubidots_dashboard.png)
